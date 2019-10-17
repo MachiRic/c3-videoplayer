@@ -1,19 +1,15 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
 import Data from './data'
-import logo from './logo.svg';
 import './App.css';
 
+import { useAlert } from 'react-alert'
+
 function App() {
+  const alert = useAlert()
   return (
     <div className="App">
       <header className="App-header">
-        <Data/>
+        <Data alert={alert}/>
       </header>
     </div>
   );

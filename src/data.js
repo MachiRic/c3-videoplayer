@@ -8,14 +8,17 @@ var pubnub = null;
 class Datamodel extends Component {
     constructor(props) {
         super(props);
+        console.log(this.props.alert)
         this.state = {
             queue: [],
-            status: "",
+            status: "play",
+            event: "",
             opts: {
                 height: '1000',
                 width: '1450',
                 playerVars: { // https://developers.google.com/youtube/player_parameters
-                    autoplay: 1
+                    autoplay: 1,
+                    controls: 0
                 }
             }
         }
@@ -45,9 +48,17 @@ class Datamodel extends Component {
                     if (m.publisher != pubnub.getUUID()) {
                         if (m.message.action == "add") {
                             this.setState({ queue: [...this.state.queue, m.message.item] })
+                            this.props.alert.success("Added: " + m.message.item.title)
                         }
                         else if (m.message.action == "remove") {
                             this.setState({ queue: this.state.queue.filter(i => i.id != m.message.item.id) })
+                            this.props.alert.error("Removed: " + m.message.item.title)
+                        }
+                        else if (m.message.action == "pause") {
+                            this.state.event.target.pauseVideo();
+                        }
+                        else if (m.message.action == "play") {
+                            this.state.event.target.playVideo();
                         }
                     }
                 }
@@ -60,6 +71,13 @@ class Datamodel extends Component {
         console.log(this.state.queue)
     }
 
+    _onReady = (event) => {
+        // access to player in all event handlers via event.target
+        //event.target.pauseVideo();
+        this.setState({ event: event })
+    }
+
+
     _onStateChange = (event) => {
         console.log(event.data)
         if (event.data == 0) {
@@ -68,14 +86,16 @@ class Datamodel extends Component {
             pubnub.publish({
                 message: {
                     action: 'remove',
-                    item: this.state.queue[0].id
+                    item: this.state.queue[0]
                 },
                 channel: 'Queue'
             });
 
             if (this.state.queue.length > !2) {
                 this.setState({ queue: this.state.queue.slice(1) })
-
+                if (this.state.queue.length !== 0) {
+                    this.props.alert.show("Next playing: " + this.state.queue[0].title)
+                }
             }
         }
     }
@@ -89,14 +109,12 @@ class Datamodel extends Component {
                 <h3>Use the hiva app to add media to the queue!</h3></div>
         }
         else {
-            console.log("Ska visa video but problems you know...")
-            console.log("Objektet som ska visas: ", this.state.queue[0].youtubeId)
             let videoId = this.state.queue[0].youtubeId;
-            console.log(videoId)
             content = <YouTube
                 videoId={videoId}
                 opts={this.state.opts}
                 onStateChange={this._onStateChange}
+                onReady={this._onReady}
             />
         }
         return (
