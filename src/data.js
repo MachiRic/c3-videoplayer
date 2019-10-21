@@ -110,7 +110,7 @@ class Datamodel extends Component {
         }
         else {
             let videoId = this.state.queue[0].youtubeId;
-            content = <YouTube
+            content = <YouTube className="cover"
                 videoId={videoId}
                 opts={this.state.opts}
                 onStateChange={this._onStateChange}
