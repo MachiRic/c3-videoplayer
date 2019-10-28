@@ -8,7 +8,6 @@ var pubnub = null;
 class Datamodel extends Component {
     constructor(props) {
         super(props);
-        console.log(this.props.alert)
         this.state = {
             queue: [],
             status: "play",
