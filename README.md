@@ -1,3 +1,15 @@
+#hiva project
+
+The project hiva is a simple proof of concept of (hopefully synchronized) media queueing using react hooks.
+
+This is a prototype of a chromecast app which is part of a bigger project called hiva. This code is representing how the tv would respond
+to the app, that can be found in this repository https://github.com/Lunkers/queue-with-hooks/
+
+
+A demo of the project can be found here: https://drive.google.com/file/d/1LWmtIqnuhitnJt2z7TgN_1RPwAOkiFMa/view?usp=sharing
+More specific details of the idea will be added soon.
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
